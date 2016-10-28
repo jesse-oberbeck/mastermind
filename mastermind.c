@@ -28,7 +28,6 @@ int check_input(char *guess, const char *answer)
 	//RED CHECK
 	for(; i < 4; i++){
 		char *g = &guess[i];
-		//char a = answer[i2];
 		char red_a = answer[i];
 		if((*g == red_a)){
 			red_count++;
@@ -58,15 +57,16 @@ int check_input(char *guess, const char *answer)
 
 int main(int argc, char * argv[])
 {
-	const char *answer = "1233";
+	//const char *answer = "1233";
 	char guess[5];
+	char *answer[4];
 	//char *flag;
 	int reds = 0;
 	int count = 0;
 	int check;
-	//srand(time(NULL) + clock());
-	//int answer_num = (rand() % 9000) + 1000;
-	
+	srand(time(NULL) + clock());
+	int answer_num = (rand() % 9000) + 1000;
+	sprintf(answer, "%d", answer_num);
 	printf("random answer: %s\n", answer);
 	//Checks for auto-play flag.
 	//if(argc == 2){
