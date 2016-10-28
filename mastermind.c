@@ -59,8 +59,8 @@ int main(int argc, char * argv[])
 {
 	//const char *answer = "1233";
 	char guess[5];
-	char *answer[4];
-	//char *flag;
+	char answer[4];
+	char *flag;
 	int reds = 0;
 	int count = 0;
 	int check;
@@ -69,9 +69,12 @@ int main(int argc, char * argv[])
 	sprintf(answer, "%d", answer_num);
 	printf("random answer: %s\n", answer);
 	//Checks for auto-play flag.
-	//if(argc == 2){
-	//	flag = argv[1];
-	//}
+	if(argc == 2){
+		flag = argv[1];
+		if(strcmp(flag, "-f") == 0){
+			puts("F detected.");
+		}
+	}
 	
 	puts("Welcome to Mastermind. Enter your 4 digit integer guess.");
 	while(reds != 4){
