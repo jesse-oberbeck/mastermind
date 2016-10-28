@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <sysexits.h>
 #include <string.h>
+#include <time.h>
+#include <stdlib.h>
 
 int collect_input(char *guess)
 {
@@ -24,14 +26,13 @@ int check_input(char *guess, const char *answer)
 	int whites[4] = {0,0,0,0};
 
 	//RED CHECK
-	for( i; i < 4; i++){
+	for(; i < 4; i++){
 		char *g = &guess[i];
-		char a = answer[i2];
+		//char a = answer[i2];
 		char red_a = answer[i];
 		if((*g == red_a)){
 			red_count++;
 			reds[i] = 1;
-			//break;
 		}else{
 			reds[i] = 0;
 		}
@@ -40,10 +41,10 @@ int check_input(char *guess, const char *answer)
 	//WHITE CHECK
 	for(i = 0; i < 4; i++){
 		if(reds[i] == 0){
-			char *g = &guess[i];
+			char g = guess[i];
 			for(i2 = 0; i2 < 4; i2++){
 				char a = answer[i2];
-				if((*g == a) && (reds[i2] == 0) && (whites[i2] == 0)){
+				if((g == a) && (reds[i2] == 0) && (whites[i2] == 0)){
 					white_count++;
 					whites[i2] = 1;
 					break;					
@@ -57,17 +58,20 @@ int check_input(char *guess, const char *answer)
 
 int main(int argc, char * argv[])
 {
-	char *answer = "1233";
+	const char *answer = "1233";
 	char guess[5];
-	char *flag;
+	//char *flag;
 	int reds = 0;
 	int count = 0;
 	int check;
-
+	//srand(time(NULL) + clock());
+	//int answer_num = (rand() % 9000) + 1000;
+	
+	printf("random answer: %s\n", answer);
 	//Checks for auto-play flag.
-	if(argc == 2){
-		flag = argv[1];
-	}
+	//if(argc == 2){
+	//	flag = argv[1];
+	//}
 	
 	puts("Welcome to Mastermind. Enter your 4 digit integer guess.");
 	while(reds != 4){
