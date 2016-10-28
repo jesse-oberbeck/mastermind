@@ -3,6 +3,21 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
+#include <unistd.h>
+
+int answer_file(char *answer)
+{
+	FILE *mm = fopen(".mm", "r");
+	if(!mm) {
+		perror("Answer file failed to open");
+		return(EX_NOINPUT);
+	}
+	answer = fgets(answer, 5, mm);
+	answer[4] = '\0';
+	printf("file answer: (%s)\n", answer);
+	return(0);
+
+}
 
 int collect_input(char *guess)
 {
@@ -65,15 +80,22 @@ int main(int argc, char * argv[])
 	int count = 0;
 	int check;
 	srand(time(NULL) + clock());
-	int answer_num = (rand() % 9000) + 1000;
-	sprintf(answer, "%d", answer_num);
-	printf("random answer: %s\n", answer);
-	//Checks for auto-play flag.
+	//int answer_num = (rand() % 9000) + 1000;
+	//sprintf(answer, "%d", answer_num);
+	//printf("random answer: %s\n", answer);
+	//Checks for flags, calls function associated with flag recieved.
 	if(argc == 2){
 		flag = argv[1];
 		if(strcmp(flag, "-f") == 0){
 			puts("F detected.");
+			if(access(".mm", F_OK) != -1){ //Citation for code at bottom.
+				answer_file(answer);
+			}
 		}
+	}else{
+		int answer_num = (rand() % 9000) + 1000;
+		sprintf(answer, "%d", answer_num);
+		printf("random answer: %s\n", answer);
 	}
 	
 	puts("Welcome to Mastermind. Enter your 4 digit integer guess.");
@@ -89,4 +111,4 @@ int main(int argc, char * argv[])
 	}
 	puts("YOU WIN!");
 	return(0);
-}
+}//Found at stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c-cross-platform
