@@ -4,7 +4,7 @@
 
 char * collect_input(char *guess)
 {
-    printf("Guess: ");
+    printf("Guess a number: ");
     scanf("%s", guess);
     //printf("In collect guess: %s\n", guess);
     return(guess);
@@ -14,21 +14,29 @@ int check_input(char *guess, const char *answer)
 {
     int red_count = 0;
     int white_count = 0;
+    unsigned int i2 = 0;
+    unsigned int i = 0;
 
-    for(unsigned int i = 0; i < 4; i++){
-	//printf("LOOP STARTED\n");
-        //printf("g char: %c\n", guess[i]);
-        char g = guess[i];
-
-            for(unsigned int i2 = 0; i2 < 4; i2++){
+    for( i; i < 4; i++){
+        char *g = &guess[i];
+        //char *gp = guess;
+            for(i2; i2 < 4; i2++){
                 char a = answer[i2];
-                if((i == i2) && (g == a)){
+                char *ap = &a;
+                if((i == i2) && (*g == a)){
                     red_count++;
-                }else if((g == a) && (i != i2)){
+                    printf("INDEX: i: %d i2: %d\n", i, i2);
+                    printf("VALUES: a: %c rg: %c ~\n\n",*ap, *g);
+                    //*ap = 'r';
+                    break;
+                }else if((*g == *ap) && (i != i2)){
                     white_count++;
-
+                    printf("INDEX: i: %d i2: %d\n", i, i2);
+                    printf("VALUES: a: %c wg: %c ~\n\n",*ap, *g);
+                    g = &guess[i2 + 1];
+                    
                 }
-
+                //printf("\na: %c g: %c\n",*ap, *g);
             }
 
         }
@@ -38,8 +46,8 @@ int check_input(char *guess, const char *answer)
 
 int main(int argc, char * argv[])
 {
-    char *answer = "1234";
-    char guess[4];
+    char *answer = "1233";
+    char guess[5];
     char *flag;
     int reds = 0;
     int count = 0;
