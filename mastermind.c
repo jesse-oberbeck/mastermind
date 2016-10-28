@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+/*Function receives pointer to answer, opens a file, reads in
+an answer, sets it via pointer, and returns an int.*/
 int answer_file(char *answer)
 {
 	FILE *mm = fopen(".mm", "r");
@@ -19,6 +21,10 @@ int answer_file(char *answer)
 
 }
 
+/*Collects user guesses from stdin. Scanf gave me the least trouble,
+and allows the program to complete. I have a known issue in which
+if the buffer is overwritten, program stack smashing will be detected
+once the user wins, but scanf still caused the fewest problems*/
 int collect_input(char *guess)
 {
 	printf("Guess a number: ");
@@ -31,6 +37,10 @@ int collect_input(char *guess)
 	return(0);
 }
 
+
+/*Checks the user's answer for correct numbers(red),
+and numbers that would be correct, but are in the 
+wrong slot(white).*/
 int check_input(char *guess, const char *answer)
 {
 	int red_count = 0;
@@ -72,7 +82,6 @@ int check_input(char *guess, const char *answer)
 
 int main(int argc, char * argv[])
 {
-	//const char *answer = "1233";
 	char guess[5];
 	char answer[4];
 	char *flag;
@@ -80,6 +89,7 @@ int main(int argc, char * argv[])
 	int count = 0;
 	int check;
 	srand(time(NULL) + clock());
+	//Checks for flags/arguments, launches corresponding action.
 	if(argc == 2){
 		flag = argv[1];
 		if(strcmp(flag, "-f") == 0){
@@ -89,11 +99,13 @@ int main(int argc, char * argv[])
 			}
 		}
 	}else{
+		//Randomizes answer if one is not taken from a file.
 		int answer_num = (rand() % 9000) + 1000;
 		sprintf(answer, "%d", answer_num);
 		printf("random answer: %s\n", answer);
 	}
-	
+
+	//Prompt user for input, call check function on input recieved.	
 	puts("Welcome to Mastermind. Enter your 4 digit integer guess.");
 	while(reds != 4){
 		check = collect_input(guess);
@@ -101,7 +113,6 @@ int main(int argc, char * argv[])
 			continue;
 		}
 		count++;
-		//printf("Guess: %s\n", guess);
 		reds = check_input(guess, answer);
 		printf("%d guesses.\n\n", count);
 	}
