@@ -80,10 +80,6 @@ int main(int argc, char * argv[])
 	int count = 0;
 	int check;
 	srand(time(NULL) + clock());
-	//int answer_num = (rand() % 9000) + 1000;
-	//sprintf(answer, "%d", answer_num);
-	//printf("random answer: %s\n", answer);
-	//Checks for flags, calls function associated with flag recieved.
 	if(argc == 2){
 		flag = argv[1];
 		if(strcmp(flag, "-f") == 0){
