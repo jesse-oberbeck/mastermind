@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+
+
 /*Function receives pointer to answer, opens a file, reads in
 an answer, sets it via pointer, and returns an int.*/
 int answer_file(char *answer)
@@ -49,6 +51,7 @@ int check_input(char *guess, const char *answer)
 	unsigned int i = 0;
 	int reds[4] = {0,0,0,0};
 	int whites[4] = {0,0,0,0};
+	int output[2];
 
 	//RED CHECK
 	for(; i < 4; i++){
@@ -77,28 +80,55 @@ int check_input(char *guess, const char *answer)
 		}
 	}
 	printf("Red: %d, White: %d\n", red_count, white_count);
-	return(red_count);
+	output[0] = red_count;
+	output[1] = white_count;
+	return(*output);
 }
+
+
+int auto_play(const char *answer, char *guess)
+{
+	int output[2];
+	char *compguess = guess;
+	if(strcmp(compguess, "frst") == 0){
+		strcpy(compguess, "1234");
+	}
+	printf("compguess: %s\n", compguess);
+	printf("answer: %s\n", answer);
+	*output = check_input(compguess, answer);
+	printf("auto output: (%d) (%d)\n", output[0], output[1]);
+	if(output[1] == 0){
+		puts("match");
+		strcpy(compguess, "5678");
+	}
+	return(0);
+}
+
 
 int main(int argc, char * argv[])
 {
-	char guess[5];
+	int output[2];
+	char guess[4] = {"frst"};
 	char answer[4];
-	char *flag;
+	const char *flag = " ";
 	int reds = 0;
 	int count = 0;
 	int check;
+	int auto_flag = 0;
 	srand(time(NULL) + clock());
 	//Checks for flags/arguments, launches corresponding action.
-	if(argc == 2){
-		flag = argv[1];
-		if(strcmp(flag, "-f") == 0){
-			puts("F detected.");
-			if(access(".mm", F_OK) != -1){ //Citation for code at bottom.
-				answer_file(answer);
-			}
-		}
-	}else{
+	if((argc == 2) && (strcmp(argv[1], "-f") == 0)){
+		flag = "f";
+		puts("F detected.");
+		if(access(".mm", F_OK) != -1){ //Citation for code at bottom.
+			answer_file(answer);
+		}	
+	}else if((argc == 2) && (strcmp(argv[1], "-a") == 0)){
+		puts("setting auto");
+		auto_flag += 1;
+	}
+	puts(flag);
+	if(strcmp(flag, "f") != 0){
 		//Randomizes answer if one is not taken from a file.
 		int answer_num = (rand() % 9000) + 1000;
 		sprintf(answer, "%d", answer_num);
@@ -108,12 +138,19 @@ int main(int argc, char * argv[])
 	//Prompt user for input, call check function on input recieved.	
 	puts("Welcome to Mastermind. Enter your 4 digit integer guess.");
 	while(reds != 4){
-		check = collect_input(guess);
+		if(auto_flag > 0){
+			//puts("auto");
+			check = auto_play(answer, guess);
+		}else{
+			check = collect_input(guess);
+		}
 		if(check != 0){
 			continue;
 		}
 		count++;
-		reds = check_input(guess, answer);
+		*output = check_input(guess, answer);
+		//printf("OUTPUT: %d\n", output[0]); 
+		reds = output[0];
 		printf("%d guesses.\n\n", count);
 	}
 	puts("YOU WIN!");
