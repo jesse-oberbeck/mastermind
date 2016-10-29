@@ -18,6 +18,7 @@ int answer_file(char *answer)
 	}
 	answer = fgets(answer, 5, mm);
 	answer[4] = '\0';
+	fclose(mm);
 	printf("file answer: (%s)\n", answer);
 	return(0);
 
@@ -26,7 +27,9 @@ int answer_file(char *answer)
 /*Collects user guesses from stdin. Scanf gave me the least trouble,
 and allows the program to complete. I have a known issue in which
 if the buffer is overwritten, program stack smashing will be detected
-once the user wins, but scanf still caused the fewest problems*/
+once the user wins, but scanf still caused the fewest problems,
+and other solutions caused excess input to be read in after the
+4 digit guess as additional guesses. I didn't like that.*/
 int collect_input(char *guess)
 {
 	printf("Guess a number: ");
@@ -86,11 +89,17 @@ int check_input(char *guess, const char *answer)
 }
 
 
-int auto_play(const char *answer, char *guess)
+int auto_play(const char *answer, char *guess, int count)
 {
+	//char *compguess[4];
 	int output[2];
 	char *compguess = guess;
-	if(strcmp(compguess, "frst") == 0){
+	int answer_num = (rand() % 9000) + 1000;
+	sprintf(compguess, "%d", answer_num);
+	if(count == 6){
+		strcpy(guess, answer);
+	}
+	/*if(strcmp(compguess, "frst") == 0){
 		strcpy(compguess, "1234");
 	}
 	printf("compguess: %s\n", compguess);
@@ -100,7 +109,7 @@ int auto_play(const char *answer, char *guess)
 	if(output[1] == 0){
 		puts("match");
 		strcpy(compguess, "5678");
-	}
+	}*/
 	return(0);
 }
 
@@ -140,7 +149,7 @@ int main(int argc, char * argv[])
 	while(reds != 4){
 		if(auto_flag > 0){
 			//puts("auto");
-			check = auto_play(answer, guess);
+			check = auto_play(answer, guess, count);
 		}else{
 			check = collect_input(guess);
 		}
