@@ -91,25 +91,12 @@ int check_input(char *guess, const char *answer)
 
 int auto_play(const char *answer, char *guess, int count)
 {
-	//char *compguess[4];
-	int output[2];
 	char *compguess = guess;
 	int answer_num = (rand() % 9000) + 1000;
 	sprintf(compguess, "%d", answer_num);
 	if(count == 6){
 		strcpy(guess, answer);
 	}
-	/*if(strcmp(compguess, "frst") == 0){
-		strcpy(compguess, "1234");
-	}
-	printf("compguess: %s\n", compguess);
-	printf("answer: %s\n", answer);
-	*output = check_input(compguess, answer);
-	printf("auto output: (%d) (%d)\n", output[0], output[1]);
-	if(output[1] == 0){
-		puts("match");
-		strcpy(compguess, "5678");
-	}*/
 	return(0);
 }
 
